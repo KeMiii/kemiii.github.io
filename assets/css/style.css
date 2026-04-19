@@ -16,15 +16,15 @@
     --text-tertiary: #a3a3a3;
     --text-inverse: #ffffff;
     
-    --accent: #7c3aed;
-    --accent-light: #8b5cf6;
-    --accent-dark: #6d28d9;
-    --accent-glow: rgba(124, 58, 237, 0.2);
+    --accent: #4c1d95;
+    --accent-light: #7c3aed;
+    --accent-dark: #4c1d95;
+    --accent-glow: rgba(76, 29, 149, 0.15);
     
     --border: #e5e5e5;
     --border-light: #f0f0f0;
     
-    --gradient-primary: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+    --gradient-primary: linear-gradient(135deg, #4c1d95 0%, #7c3aed 100%);
     --gradient-bg: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
     
     /* Typography */
@@ -86,7 +86,7 @@
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
     --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
-    --shadow-glow: 0 0 40px rgba(124, 58, 237, 0.3);
+    --shadow-glow: 0 0 40px rgba(124, 58, 237, 0.2);
 }
 
 /* ---------- Reset & Base ---------- */
@@ -420,7 +420,7 @@ img {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 120px var(--space-lg) 80px;
+    padding: 160px var(--space-lg) 120px;
     overflow: hidden;
 }
 
@@ -907,6 +907,7 @@ img {
 .about {
     background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
     position: relative;
+    padding: var(--space-3xl) 0;
 }
 
 .about::before {
@@ -1041,6 +1042,7 @@ img {
 /* ---------- Resume Section ---------- */
 .resume {
     background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    padding: var(--space-3xl) 0;
 }
 
 .resume::before {
@@ -1295,7 +1297,7 @@ img {
 
 .portfolio-card:hover {
     transform: translateY(-4px);
-    box-shadow: var(--shadow-xl), var(--shadow-glow);
+    box-shadow: 0 8px 30px rgba(76, 29, 149, 0.1);
     border-color: var(--accent);
 }
 
@@ -1638,8 +1640,8 @@ img {
     transform: rotate(0deg) scale(1.05) translateY(-10px) !important;
     z-index: 10;
     box-shadow: 
-        0 25px 50px rgba(0, 0, 0, 0.3),
-        0 0 40px rgba(124, 58, 237, 0.2);
+        0 25px 50px rgba(76, 29, 149, 0.2),
+        0 0 40px rgba(76, 29, 149, 0.15);
 }
 
 .photo-item:hover img {
@@ -1720,13 +1722,7 @@ img {
     animation-delay: -7s;
 }
 
-.drawings .section-label {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-}
-
-.drawings .section-title::after {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-}
+/* drawings section label and underline - removed for consistency */
 
 .drawings .photo-item {
     border: 2px solid rgba(245, 87, 108, 0.2);
@@ -2438,8 +2434,8 @@ img {
     transform: rotate(0deg) scale(1.05) translateY(-10px) !important;
     z-index: 10;
     box-shadow: 
-        0 25px 50px rgba(0, 0, 0, 0.3),
-        0 0 40px rgba(124, 58, 237, 0.2);
+        0 25px 50px rgba(76, 29, 149, 0.2),
+        0 0 40px rgba(76, 29, 149, 0.15);
 }
 
 .gallery-item:hover img {
@@ -2699,7 +2695,7 @@ img {
 
 [data-theme="dark"] .glass-card:hover {
     background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(240, 147, 251, 0.3);
+    border-color: rgba(124, 58, 237, 0.4);
 }
 
 .glass-card:nth-child(1) { animation-delay: 0.05s; }
@@ -2728,10 +2724,10 @@ img {
 .glass-card:hover {
     transform: translateY(-8px) scale(1.02);
     box-shadow: 
-        0 20px 60px rgba(0, 0, 0, 0.15),
-        0 0 0 2px rgba(240, 147, 251, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    border-color: rgba(240, 147, 251, 0.3);
+        0 20px 60px rgba(76, 29, 149, 0.12),
+        0 0 0 2px rgba(124, 58, 237, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    border-color: rgba(124, 58, 237, 0.3);
 }
 
 /* 渐变边框 */
@@ -2741,10 +2737,9 @@ img {
     inset: -2px;
     background: linear-gradient(
         135deg,
-        rgba(240, 147, 251, 0.5),
-        rgba(245, 87, 108, 0.5),
-        rgba(255, 126, 179, 0.5),
-        rgba(240, 147, 251, 0.5)
+        rgba(76, 29, 149, 0.8),
+        rgba(124, 58, 237, 0.6),
+        rgba(76, 29, 149, 0.8)
     );
     border-radius: 26px;
     z-index: -1;
@@ -2798,7 +2793,7 @@ img {
     font-family: var(--font-mono);
     font-size: 11px;
     font-weight: 500;
-    color: rgba(240, 147, 251, 0.9);
+    color: rgba(124, 58, 237, 0.9);
     text-transform: uppercase;
     letter-spacing: 2px;
     margin-bottom: 8px;
