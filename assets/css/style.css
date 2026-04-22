@@ -1306,7 +1306,7 @@ img {
 }
 
 .card-image {
-    aspect-ratio: 16/9;
+    aspect-ratio: 4/3;
     overflow: hidden;
     position: relative;
 }
@@ -1315,6 +1315,7 @@ img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     transition: transform var(--transition-slow);
 }
 
@@ -1477,6 +1478,262 @@ img {
 .card-link i {
     width: 16px;
     height: 16px;
+}
+
+/* ============================================
+   Featured Portfolio - 毕业设计重点展示
+   ============================================ */
+
+.portfolio-featured-header {
+    margin-bottom: var(--space-2xl);
+}
+
+.portfolio-featured-desc {
+    margin-top: var(--space-md);
+    font-size: 1rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+}
+
+/* 两个毕设大卡片 */
+.featured-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xl);
+    margin-bottom: var(--space-3xl);
+}
+
+.featured-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: all var(--transition-base);
+    cursor: pointer;
+}
+
+.featured-card:hover {
+    box-shadow: 0 12px 40px rgba(76, 29, 149, 0.12);
+    border-color: var(--accent-light);
+    transform: translateY(-2px);
+}
+
+.featured-card-left {
+    /* AR 项目图片在左 */
+    grid-template-columns: 1fr 1fr;
+}
+
+.featured-card-right {
+    /* 仓城项目图片在右，内容在左 */
+    grid-template-columns: 1fr 1fr;
+}
+
+.featured-card-right .featured-card-image {
+    order: 2;
+}
+
+.featured-card-right .featured-card-body {
+    order: 1;
+}
+
+/* 图片区域 */
+.featured-card-image {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: auto;
+    min-height: 360px;
+}
+
+.featured-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--transition-slow);
+}
+
+.featured-card:hover .featured-img {
+    transform: scale(1.04);
+}
+
+.featured-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.featured-card:hover .featured-overlay {
+    opacity: 1;
+}
+
+.featured-play-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.featured-play-btn i {
+    width: 48px;
+    height: 48px;
+}
+
+/* 顶部徽章 */
+.featured-badge-top {
+    position: absolute;
+    top: var(--space-lg);
+    left: var(--space-lg);
+    padding: var(--space-xs) var(--space-md);
+    background: var(--accent-light);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    letter-spacing: 0.03em;
+}
+
+/* 内容区域 */
+.featured-card-body {
+    padding: var(--space-2xl);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-md);
+}
+
+.featured-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.featured-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.featured-year {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+}
+
+.featured-title {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.3;
+}
+
+.featured-subtitle {
+    font-size: 0.875rem;
+    color: var(--accent);
+    font-weight: 500;
+}
+
+.featured-desc {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.75;
+}
+
+.featured-highlights {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.featured-highlights li {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    padding-left: var(--space-md);
+    position: relative;
+}
+
+.featured-highlights li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent-light);
+    font-weight: 600;
+}
+
+.featured-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+
+.featured-tech span {
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+}
+
+.featured-links {
+    display: flex;
+    gap: var(--space-md);
+    margin-top: var(--space-xs);
+}
+
+.featured-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--accent);
+    transition: opacity var(--transition-fast);
+}
+
+.featured-link:hover {
+    opacity: 0.75;
+}
+
+/* 分隔线 */
+.portfolio-divider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-2xl);
+}
+
+.portfolio-divider::before,
+.portfolio-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+.portfolio-divider span {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
 }
 
 /* Coming Soon Card */
@@ -1972,13 +2229,40 @@ img {
     .portfolio-grid-3col {
         grid-template-columns: repeat(2, 1fr);
     }
-    
+
     .portfolio-card:not(.portfolio-card-featured) {
         grid-column: span 12;
     }
-    
+
     .portfolio-card-featured {
         grid-column: span 12;
+    }
+
+    /* 毕设大卡片平板适配 */
+    .featured-card,
+    .featured-card-left,
+    .featured-card-right {
+        grid-template-columns: 1fr;
+    }
+
+    .featured-card-image {
+        min-height: 240px;
+    }
+
+    .featured-card-right .featured-card-image {
+        order: 0;
+    }
+
+    .featured-card-right .featured-card-body {
+        order: 1;
+    }
+
+    .featured-card-body {
+        padding: var(--space-xl);
+    }
+
+    .featured-title {
+        font-size: 1.25rem;
     }
     
     .contact-content {
@@ -2016,7 +2300,47 @@ img {
     .portfolio-grid-3col {
         grid-template-columns: 1fr;
     }
-    
+
+    /* 毕设大卡片手机适配 */
+    .featured-card,
+    .featured-card-left,
+    .featured-card-right {
+        grid-template-columns: 1fr;
+        border-radius: var(--radius-lg);
+    }
+
+    .featured-card-image {
+        min-height: 200px;
+    }
+
+    .featured-card-right .featured-card-image {
+        order: 0;
+    }
+
+    .featured-card-right .featured-card-body {
+        order: 1;
+    }
+
+    .featured-card-body {
+        padding: var(--space-lg);
+    }
+
+    .featured-title {
+        font-size: 1.125rem;
+    }
+
+    .featured-desc {
+        font-size: 0.85rem;
+    }
+
+    .featured-highlights li {
+        font-size: 0.8rem;
+    }
+
+    .featured-grid {
+        gap: var(--space-xl);
+    }
+
     .hero-cta {
         flex-direction: column;
         align-items: stretch;
