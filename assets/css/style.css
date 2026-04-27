@@ -101,6 +101,47 @@ html {
     scroll-padding-top: 80px;
 }
 
+/* ── Custom Cursor ─────────────────────────────────────────── */
+.cursor-dot {
+    position: fixed;
+    left: -200px;
+    top: -200px;
+    width: 8px;
+    height: 8px;
+    background: #a78bfa;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease, opacity 0.2s;
+    will-change: left, top;
+}
+.cursor-ring {
+    position: fixed;
+    left: -200px;
+    top: -200px;
+    width: 36px;
+    height: 36px;
+    border: 1.5px solid rgba(167, 139, 250, 0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+    transition: width 0.4s cubic-bezier(0.16,1,0.3,1),
+                height 0.4s cubic-bezier(0.16,1,0.3,1),
+                border-color 0.3s;
+    will-change: left, top;
+}
+/* hover 状态放大 */
+.cursor-dot.hover {
+    transform: translate(-50%, -50%) scale(2.5);
+}
+.cursor-ring.hover {
+    width: 60px;
+    height: 60px;
+    border-color: rgba(167, 139, 250, 0.85);
+}
+
 body {
     font-family: var(--font-sans);
     font-size: 16px;
@@ -110,6 +151,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
+    cursor: none;
     /* 页面滚动过渡 */
     transition: background-color 0.6s ease, color 0.6s ease;
 }
@@ -425,45 +467,12 @@ img {
 }
 
 .hero-bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
+    display: none;
 }
 
 .hero-gradient {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 80% 50% at 50% -20%, var(--accent-glow) 0%, transparent 60%);
-    opacity: 0.6;
-    z-index: 0;
+    display: none;
 }
-
-/* 液态玻璃流动效果 */
-.hero-gradient::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: 
-        radial-gradient(ellipse at 30% 20%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
-        radial-gradient(ellipse at 70% 60%, rgba(236, 72, 153, 0.1) 0%, transparent 40%),
-        radial-gradient(ellipse at 50% 80%, rgba(124, 58, 237, 0.12) 0%, transparent 45%);
-    animation: liquid-flow 15s ease-in-out infinite;
-    z-index: -1;
-}
-
-/* 液态玻璃光泽层 */
-.hero-gradient::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        135deg,
-        transparent 0%,
-        rgba(255, 255, 255, 0.03) 25%,
-        transparent 50%,
         rgba(255, 255, 255, 0.02) 75%,
         transparent 100%
     );
@@ -496,30 +505,28 @@ img {
 
 /* 液态玻璃卡片效果（应用于整个hero区域） */
 .hero {
-    background: 
-        linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 0%, rgba(168, 85, 247, 0.08) 0%, transparent 60%);
+    background: transparent;
     backdrop-filter: blur(0px);
     position: relative;
 }
 
 .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: 
-        linear-gradient(180deg, 
-            transparent 0%,
-            rgba(255, 255, 255, 0.02) 50%,
-            transparent 100%
-        );
-    pointer-events: none;
+    display: none;
 }
 
 .hero-particles {
     position: absolute;
     inset: 0;
     overflow: hidden;
+}
+
+#webgl {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.5;
 }
 
 .hero-content {
@@ -3219,5 +3226,82 @@ img {
         transform: scale(0.98);
     }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   LOADER
+───────────────────────────────────────────────────────────── */
+#loader {
+    position: fixed;
+    inset: 0;
+    background: #0a0a0a;
+    z-index: 10000;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 6vw;
+    overflow: hidden;
+}
+
+.loader-count {
+    font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(5rem, 18vw, 16rem);
+    font-weight: 900;
+    color: var(--accent-light, #7c3aed);
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+}
+
+.loader-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: rgba(255, 255, 255, 0.25);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    align-self: flex-end;
+}
+
+.loader-bar-wrap {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.loader-bar {
+    height: 100%;
+    background: var(--accent-light, #7c3aed);
+    width: 0%;
+    transition: width 0.08s linear;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   DARK MODE — transparent sections so starfield shows through
+───────────────────────────────────────────────────────────── */
+[data-theme="dark"] .about,
+[data-theme="dark"] .resume,
+[data-theme="dark"] .portfolio,
+[data-theme="dark"] .photography,
+[data-theme="dark"] .drawings,
+[data-theme="dark"] .contact {
+    background: transparent;
+}
+
+/* Subtle section dividers so content areas feel distinct */
+[data-theme="dark"] .about,
+[data-theme="dark"] .portfolio,
+[data-theme="dark"] .drawings {
+    background: rgba(124, 58, 237, 0.02);
+}
+
+/* Webgl canvas opacity boost for dark mode */
+[data-theme="dark"] #webgl {
+    opacity: 0.75;
+}
+
+
 
 

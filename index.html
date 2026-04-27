@@ -22,12 +22,34 @@
     
     <!-- QRCode.js -->
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-    
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <!-- Default dark mode before JS loads (prevents flash) -->
+    <script>
+      (function(){
+        var saved = localStorage.getItem('theme');
+        if (!saved) { document.documentElement.setAttribute('data-theme','dark'); }
+        else { document.documentElement.setAttribute('data-theme', saved); }
+      })();
+    </script>
+
     <link rel="stylesheet" href="assets/css/style.css">
-    <!-- COS Image Optimization Styles -->
-    <link rel="stylesheet" href="assets/css/cos-optimization.css">
 </head>
 <body>
+    <!-- ─── LOADER ─────────────────────────────────────── -->
+    <div id="loader">
+      <div class="loader-count" id="loaderCount">0</div>
+      <span class="loader-label">LOADING — KEMI HUANG</span>
+      <div class="loader-bar-wrap">
+        <div class="loader-bar" id="loaderBar"></div>
+      </div>
+    </div>
+
     <!-- 导航栏 -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
@@ -64,11 +86,17 @@
         </ul>
     </div>
 
+    <!-- 星空背景 fixed 全局 -->
+    <canvas id="webgl"></canvas>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"  id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
     <!-- 英雄区域 -->
     <section class="hero" id="home">
         <div class="hero-bg">
             <div class="hero-gradient"></div>
-            <div class="hero-particles" id="particles"></div>
         </div>
         <div class="hero-content">
             <div class="hero-badge">
@@ -720,9 +748,6 @@
         </div>
     </footer>
 
-    <!-- COS Image Optimization Scripts -->
-    <script src="assets/js/cos-config.js"></script>
-    <script src="assets/js/image-optimizer.js"></script>
     <script src="assets/js/main.js"></script>
     <!-- 图集模态框 -->
     <div class="gallery-modal" id="galleryModal">

@@ -19,11 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initParticles();
     initQRCode();
     initRevealAnimations();
-    
-    // Initialize COS image optimization
-    if (typeof imageOptimizer !== 'undefined') {
-        initCOSImageOptimization();
-    }
+    initLoader();   /* ← loader after everything is ready */
+    initCursor();   /* ← custom cursor */
 });
 
 /**
@@ -220,227 +217,91 @@ function initTypewriter() {
  * Particle Background Effect - Gentle Mouse Following
  */
 function initParticles() {
-    const particlesContainer = document.getElementById('particles');
-    if (!particlesContainer) return;
+    const canvas = document.getElementById('webgl');
+    if (!canvas) return;
 
-    const canvas = document.createElement('canvas');
-    particlesContainer.appendChild(canvas);
-    
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    let animationId;
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let isMouseInCanvas = false;
-    const MAX_PARTICLES = 80;
-    const MIN_PARTICLES = 50;
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
-    function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+    const scene  = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.z = 3;
+
+    // Particle geometry
+    const COUNT   = 1800;
+    const geo     = new THREE.BufferGeometry();
+    const pos     = new Float32Array(COUNT * 3);
+    const col     = new Float32Array(COUNT * 3);
+
+    /* gradient: far = vivid blue, near = vivid purple-pink */
+    const FAR_R=0.00, FAR_G=0.25, FAR_B=1.00;
+    const NEAR_R=0.95, NEAR_G=0.20, NEAR_B=1.00;
+
+    for (let i = 0; i < COUNT; i++) {
+        pos[i * 3]     = (Math.random() - 0.5) * 12;
+        pos[i * 3 + 1] = (Math.random() - 0.5) * 12;
+        pos[i * 3 + 2] = (Math.random() - 0.5) * 6;
+        const t = (pos[i * 3 + 2] + 3) / 6;   // 0 (far) → 1 (near)
+        col[i * 3]     = FAR_R  + (NEAR_R - FAR_R)  * t;
+        col[i * 3 + 1] = FAR_G  + (NEAR_G - FAR_G)  * t;
+        col[i * 3 + 2] = FAR_B  + (NEAR_B - FAR_B)  * t;
     }
 
-    function createParticle() {
-        // 在屏幕边缘随机生成新粒子
-        const side = Math.floor(Math.random() * 4);
-        let x, y;
-        
-        switch(side) {
-            case 0: // top
-                x = Math.random() * canvas.width;
-                y = -20;
-                break;
-            case 1: // right
-                x = canvas.width + 20;
-                y = Math.random() * canvas.height;
-                break;
-            case 2: // bottom
-                x = Math.random() * canvas.width;
-                y = canvas.height + 20;
-                break;
-            case 3: // left
-                x = -20;
-                y = Math.random() * canvas.height;
-                break;
-        }
-        
-        return {
-            x: x,
-            y: y,
-            // 粒子大小差距更大：小的0.5，大的4
-            size: Math.random() * 3.5 + 0.5,
-            baseSpeedX: (Math.random() - 0.5) * 0.4,
-            baseSpeedY: (Math.random() - 0.5) * 0.4,
-            speedX: (Math.random() - 0.5) * 0.4,
-            speedY: (Math.random() - 0.5) * 0.4,
-            // 亮度差距更大：暗的0.15，亮的0.9
-            opacity: Math.random() * 0.75 + 0.15,
-            // 跟随鼠标的参数
-            followStrength: Math.random() * 0.008 + 0.002
-        };
-    }
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute('color',    new THREE.BufferAttribute(col, 3));
 
-    function createParticles() {
-        particles = [];
-        for (let i = 0; i < MIN_PARTICLES; i++) {
-            const p = createParticle();
-            // 初始时在屏幕内随机分布
-            p.x = Math.random() * canvas.width;
-            p.y = Math.random() * canvas.height;
-            particles.push(p);
-        }
-    }
+    // Build a soft-circle sprite texture so each star is a proper dot
+    const spriteCanvas = document.createElement('canvas');
+    spriteCanvas.width = spriteCanvas.height = 64;
+    const sc = spriteCanvas.getContext('2d');
+    const grd = sc.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grd.addColorStop(0,   'rgba(255,255,255,1)');
+    grd.addColorStop(0.4, 'rgba(255,255,255,0.9)');
+    grd.addColorStop(1,   'rgba(255,255,255,0)');
+    sc.fillStyle = grd;
+    sc.fillRect(0, 0, 64, 64);
+    const spriteTex = new THREE.CanvasTexture(spriteCanvas);
 
-    // Mouse tracking
-    canvas.addEventListener('mousemove', (e) => {
-        const rect = canvas.getBoundingClientRect();
-        mouseX = e.clientX - rect.left;
-        mouseY = e.clientY - rect.top;
-        isMouseInCanvas = true;
+    const mat = new THREE.PointsMaterial({
+        size:           0.03,
+        map:            spriteTex,
+        transparent:    true,
+        opacity:        0.6,
+        vertexColors:   true,
+        sizeAttenuation: true,
+        alphaTest:      0.01,
     });
 
-    canvas.addEventListener('mouseleave', () => {
-        isMouseInCanvas = false;
+    const points = new THREE.Points(geo, mat);
+    scene.add(points);
+
+    let mouseX = 0, mouseY = 0;
+    document.addEventListener('mousemove', e => {
+        mouseX = (e.clientX / window.innerWidth  - 0.5) * 0.3;
+        mouseY = (e.clientY / window.innerHeight - 0.5) * 0.2;
     });
 
-    canvas.addEventListener('mouseenter', () => {
-        isMouseInCanvas = true;
-    });
-
+    const clock = new THREE.Clock();
     function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        const color = isDark ? '124, 58, 237' : '124, 58, 237';
-        
-        // 粒子数量管理 - 更频繁生成
-        if (particles.length < MIN_PARTICLES && Math.random() < 0.1) {
-            particles.push(createParticle());
-        }
-        if (isMouseInCanvas && particles.length < MAX_PARTICLES && Math.random() < 0.05) {
-            particles.push(createParticle());
-        }
-        // 鼠标附近额外生成粒子
-        if (isMouseInCanvas && particles.length < MAX_PARTICLES) {
-            if (Math.random() < 0.02) {
-                const p = createParticle();
-                // 在鼠标附近生成
-                p.x = mouseX + (Math.random() - 0.5) * 100;
-                p.y = mouseY + (Math.random() - 0.5) * 100;
-                particles.push(p);
-            }
-        }
-        
-        // 更新和绘制粒子
-        for (let i = particles.length - 1; i >= 0; i--) {
-            const particle = particles[i];
-            
-            // 鼠标跟随效果 - 更温和
-            if (isMouseInCanvas) {
-                const dx = mouseX - particle.x;
-                const dy = mouseY - particle.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                
-                // 粒子被鼠标轻微吸引
-                if (distance > 80 && distance < 400) {
-                    const force = particle.followStrength * (1 - distance / 400) * 0.5;
-                    particle.speedX += dx * force;
-                    particle.speedY += dy * force;
-                } else if (distance <= 80) {
-                    // 太近了，轻微排斥（防止抖动）
-                    const repelForce = 0.02;
-                    particle.speedX -= dx * repelForce;
-                    particle.speedY -= dy * repelForce;
-                }
-            }
-            
-            // 更慢的速度衰减
-            particle.speedX *= 0.98;
-            particle.speedY *= 0.98;
-            
-            // 添加基础随机运动
-            particle.speedX += particle.baseSpeedX * 0.05;
-            particle.speedY += particle.baseSpeedY * 0.05;
-            
-            // 限制最大速度（防止抖动）
-            const maxSpeed = 2;
-            const currentSpeed = Math.sqrt(particle.speedX ** 2 + particle.speedY ** 2);
-            if (currentSpeed > maxSpeed) {
-                particle.speedX = (particle.speedX / currentSpeed) * maxSpeed;
-                particle.speedY = (particle.speedY / currentSpeed) * maxSpeed;
-            }
-            
-            // 更新位置
-            particle.x += particle.speedX;
-            particle.y += particle.speedY;
-            
-            // 检查是否飞出屏幕太远，如果是则移除
-            if (particle.x < -100 || particle.x > canvas.width + 100 || 
-                particle.y < -100 || particle.y > canvas.height + 100) {
-                particles.splice(i, 1);
-                continue;
-            }
-            
-            // 绘制粒子
-            ctx.beginPath();
-            ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(${color}, ${particle.opacity})`;
-            ctx.fill();
-            
-            // 鼠标和粒子之间的连线（更淡）
-            if (isMouseInCanvas) {
-                const dx = mouseX - particle.x;
-                const dy = mouseY - particle.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                
-                if (distance < 200) {
-                    ctx.beginPath();
-                    ctx.moveTo(particle.x, particle.y);
-                    ctx.lineTo(mouseX, mouseY);
-                    ctx.strokeStyle = `rgba(${color}, ${0.08 * (1 - distance / 200)})`;
-                    ctx.lineWidth = 0.5;
-                    ctx.stroke();
-                }
-            }
-        }
-
-        // Draw connections between particles
-        particles.forEach((particle1, i) => {
-            particles.slice(i + 1).forEach(particle2 => {
-                const dx = particle1.x - particle2.x;
-                const dy = particle1.y - particle2.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                
-                if (distance < 100) {
-                    ctx.beginPath();
-                    ctx.moveTo(particle1.x, particle1.y);
-                    ctx.lineTo(particle2.x, particle2.y);
-                    ctx.strokeStyle = `rgba(${color}, ${0.05 * (1 - distance / 100)})`;
-                    ctx.lineWidth = 0.5;
-                    ctx.stroke();
-                }
-            });
-        });
-
-        animationId = requestAnimationFrame(animate);
+        requestAnimationFrame(animate);
+        const t = clock.getElapsedTime();
+        // Bounded drift (sine never exceeds ±0.08) + mouse-driven offset
+        points.rotation.y  = Math.sin(t * 0.18) * 0.08 + mouseX;
+        points.rotation.x  = Math.sin(t * 0.11) * 0.05 - mouseY;
+        renderer.render(scene, camera);
     }
-
-    resize();
-    createParticles();
     animate();
 
     window.addEventListener('resize', () => {
-        resize();
-        createParticles();
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    // Pause animation when tab is not visible
     document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-            cancelAnimationFrame(animationId);
-        } else {
-            animate();
-        }
+        if (document.hidden) renderer.setAnimationLoop(null);
+        else renderer.setAnimationLoop(animate);
     });
 }
 
@@ -504,6 +365,75 @@ window.addEventListener('load', () => {
 });
 
 /**
+ * Loader
+ */
+function initLoader() {
+    const loaderEl  = document.getElementById('loader');
+    const countEl   = document.getElementById('loaderCount');
+    const barEl     = document.getElementById('loaderBar');
+    if (!loaderEl || !countEl || !barEl) return;
+
+    let prog = 0;
+    const iv = setInterval(() => {
+        prog = Math.min(prog + Math.random() * 15 + 3, 100);
+        countEl.textContent = Math.floor(prog);
+        barEl.style.width   = prog + '%';
+        if (prog >= 100) {
+            clearInterval(iv);
+            setTimeout(() => {
+                if (typeof gsap !== 'undefined') {
+                    gsap.to(loaderEl, {
+                        yPercent: -100,
+                        duration: 0.9,
+                        ease: 'power3.inOut',
+                        onComplete: () => { loaderEl.style.display = 'none'; }
+                    });
+                } else {
+                    loaderEl.style.transition = 'opacity 0.5s';
+                    loaderEl.style.opacity    = '0';
+                    setTimeout(() => { loaderEl.style.display = 'none'; }, 500);
+                }
+            }, 200);
+        }
+    }, 55);
+}
+
+/* ─── Custom Cursor ─────────────────────────────────────────── */
+function initCursor() {
+    const dot  = document.getElementById('cursorDot');
+    const ring = document.getElementById('cursorRing');
+    if (!dot || !ring) return;
+
+    let mx = -200, my = -200;
+    let rx = -200, ry = -200;
+
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+    (function animCursor() {
+        dot.style.left = mx + 'px';
+        dot.style.top  = my + 'px';
+        rx += (mx - rx) * 0.12;
+        ry += (my - ry) * 0.12;
+        ring.style.left = rx + 'px';
+        ring.style.top  = ry + 'px';
+        requestAnimationFrame(animCursor);
+    })();
+
+    /* hover 放大 */
+    const hoverTargets = 'a, button, .work-item, .photo-item, .skill-tag, .nav-link, .theme-toggle, [role="button"]';
+    document.querySelectorAll(hoverTargets).forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            dot.classList.add('hover');
+            ring.classList.add('hover');
+        });
+        el.addEventListener('mouseleave', () => {
+            dot.classList.remove('hover');
+            ring.classList.remove('hover');
+        });
+    });
+}
+
+/**
  * Console Easter Egg
  */
 console.log('%c KEMI HUANG ', 'background: #7c3aed; color: white; font-size: 20px; padding: 10px; border-radius: 5px;');
@@ -512,32 +442,4 @@ console.log('Welcome to my personal website! Feel free to explore.');
 console.log('GitHub: https://github.com/KeMiii');
 console.log('Email: kemi24678@gmail.com');
 
-/**
- * COS Image Optimization Initialization
- * 腾讯云 COS 图片优化初始化
- */
-function initCOSImageOptimization() {
-    // 关键图片预加载
-    const criticalImages = [
-        'images/avatar.jpg',
-        'images/数字仓城.png',
-        'images/ar-exhibition/cover.jpg',
-    ];
-    
-    if (typeof preloadImages === 'function') {
-        preloadImages(criticalImages);
-    }
 
-    // 优化所有 COS 图片
-    if (typeof imageOptimizer !== 'undefined' && imageOptimizer) {
-        imageOptimizer.optimizeAllImages();
-    }
-
-    // 监控图片加载
-    if (typeof setupImageMonitoring === 'function') {
-        setupImageMonitoring();
-    }
-
-    // 输出优化信息
-    console.log('%c COS Image Optimization Enabled ', 'background: #10b981; color: white; padding: 5px 10px; border-radius: 3px;');
-}
