@@ -234,9 +234,9 @@ function initParticles() {
     const pos     = new Float32Array(COUNT * 3);
     const col     = new Float32Array(COUNT * 3);
 
-    /* gradient: far = vivid blue, near = vivid purple-pink */
-    const FAR_R=0.00, FAR_G=0.25, FAR_B=1.00;
-    const NEAR_R=0.95, NEAR_G=0.20, NEAR_B=1.00;
+    /* gradient: far = deep amber, near = vivid golden amber */
+    const FAR_R=0.69, FAR_G=0.33, FAR_B=0.03;
+    const NEAR_R=0.96, NEAR_G=0.62, NEAR_B=0.04;
 
     for (let i = 0; i < COUNT; i++) {
         pos[i * 3]     = (Math.random() - 0.5) * 12;
@@ -412,8 +412,14 @@ function initCursor() {
     (function animCursor() {
         dot.style.left = mx + 'px';
         dot.style.top  = my + 'px';
-        rx += (mx - rx) * 0.12;
-        ry += (my - ry) * 0.12;
+
+        // Distance-based lerp: further behind ring → faster catch-up
+        const dx = mx - rx, dy = my - ry;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const lerp = Math.min(0.28, 0.06 + dist * 0.006);  // 0.06..0.28
+
+        rx += dx * lerp;
+        ry += dy * lerp;
         ring.style.left = rx + 'px';
         ring.style.top  = ry + 'px';
         requestAnimationFrame(animCursor);

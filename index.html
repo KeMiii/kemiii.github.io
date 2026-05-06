@@ -18,7 +18,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@800;900&display=swap" rel="stylesheet">
     
     <!-- QRCode.js -->
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
@@ -136,11 +136,8 @@
 
     <!-- 关于区域 -->
     <section class="section about" id="about">
-        <div class="floating-orb"></div>
-        <div class="floating-orb"></div>
         <div class="container">
             <div class="section-header">
-                <span class="section-label">01</span>
                 <h2 class="section-title">关于我</h2>
             </div>
             <div class="about-content">
@@ -187,7 +184,6 @@
     <section class="section resume" id="resume">
         <div class="container">
             <div class="section-header">
-                <span class="section-label">02</span>
                 <h2 class="section-title">简历</h2>
             </div>
             <div class="resume-content">
@@ -303,20 +299,14 @@
         </div>
     </section>
 
-    <!-- Resume 到 Portfolio 过渡 -->
-    <div class="section-transition"></div>
-
     <!-- ========== 作品集区域 ========== -->
     <section class="section portfolio" id="portfolio">
         <div class="section-grid"></div>
-        <div class="floating-orb"></div>
-        <div class="floating-orb"></div>
         <div class="container">
 
             <!-- 毕业设计 · 重点展示 -->
             <div class="portfolio-featured-header">
                 <div class="section-header">
-                    <span class="section-label">03</span>
                     <h2 class="section-title">毕业设计</h2>
                 </div>
                 <p class="portfolio-featured-desc">两个完整从概念到落地的毕业项目，涵盖 AR 交互与虚拟现实两大方向</p>
@@ -413,10 +403,10 @@
             <!-- 其他作品 · 小卡片 -->
             <div class="portfolio-grid portfolio-grid-3col">
 
-                <!-- 角色设计来福 -->
-                <article class="portfolio-card" onclick="openGallery('laifu')">
+                <!-- 角色设计墨菲斯 -->
+                <article class="portfolio-card" onclick="openGallery('morpheus')">
                     <div class="card-image">
-                        <img src="https://kemi-assets-1420707478.cos.ap-shanghai.myqcloud.com/images/%E6%9D%A5%E7%A6%8F%E5%8F%A4%E5%BA%99%E5%9C%BA%E6%99%AF.png" alt="角色设计来福" class="portfolio-img"
+                        <img src="https://kemi-assets-1420707478.cos.ap-shanghai.myqcloud.com/images/%E6%9D%A5%E7%A6%8F%E5%8F%A4%E5%BA%99%E5%9C%BA%E6%99%AF.png" alt="角色设计墨菲斯" class="portfolio-img"
                              onerror="this.parentElement.querySelector('.card-placeholder').style.display='flex';">
                         <div class="card-placeholder character-bg" style="display: none;">
                             <i data-lucide="user"></i>
@@ -431,7 +421,7 @@
                             <span class="card-tag">Character Design</span>
                             <span class="card-date">2021</span>
                         </div>
-                        <h3 class="card-title">角色设计 - 来福</h3>
+                        <h3 class="card-title">角色设计 - 墨菲斯</h3>
                         <p class="card-subtitle">原创角色设计</p>
                         <div class="card-tech">
                             <span>角色设计</span>
@@ -497,16 +487,10 @@
         </div>
     </section>
 
-    <!-- Portfolio 到 Photography 过渡 -->
-    <div class="section-transition"></div>
-
     <!-- 摄影区域 -->
     <section class="section photography" id="photography">
-        <div class="floating-orb"></div>
-        <div class="floating-orb"></div>
         <div class="container">
             <div class="section-header">
-                <span class="section-label">04</span>
                 <h2 class="section-title">摄影</h2>
             </div>
             <p class="section-intro">
@@ -572,16 +556,10 @@
         </div>
     </section>
 
-    <!-- Photography 到 Drawings 过渡 -->
-    <div class="section-transition"></div>
-
     <!-- 习作区域 -->
     <section class="section drawings" id="drawings">
-        <div class="floating-orb"></div>
-        <div class="floating-orb"></div>
         <div class="container">
             <div class="section-header">
-                <span class="section-label">05</span>
                 <h2 class="section-title">习作</h2>
             </div>
             <p class="section-intro">
@@ -663,16 +641,10 @@
         </div>
     </section>
 
-    <!-- Drawings 到 Contact 过渡 -->
-    <div class="section-transition"></div>
-
     <!-- 联系区域 -->
     <section class="section contact" id="contact">
-        <div class="floating-orb"></div>
-        <div class="floating-orb"></div>
         <div class="container">
             <div class="section-header">
-                <span class="section-label">06</span>
                 <h2 class="section-title">联系</h2>
             </div>
             <div class="contact-content">
@@ -801,7 +773,7 @@
         
         // 图集数据
         const galleryData = {
-            'laifu': [
+            'morpheus': [
                 'https://kemi-assets-1420707478.cos.ap-shanghai.myqcloud.com/images/%E6%9D%A5%E7%A6%8F%E5%8F%A4%E5%BA%99%E5%9C%BA%E6%99%AF.png',
                 'https://kemi-assets-1420707478.cos.ap-shanghai.myqcloud.com/images/laifu-character/正面.png',
                 'https://kemi-assets-1420707478.cos.ap-shanghai.myqcloud.com/images/laifu-character/背面.png',
