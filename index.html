@@ -487,10 +487,21 @@
                 <!-- 一梦长安 AI短剧 -->
                 <article class="portfolio-card video-card" data-video="local" data-src="https://kemi-assets-1420707478.cos.ap-shanghai.myqcloud.com/images/changanyimeng/demo.mp4">
                     <div class="card-image">
-                        <img src="https://kemi-assets-1420707478.cos.ap-shanghai.myqcloud.com/images/changanyimeng/cover.jpg" alt="一梦长安" loading="lazy">
-                        <div class="video-play-icon">▶</div>
+                        <img src="https://kemi-assets-1420707478.cos.ap-shanghai.myqcloud.com/images/changanyimeng/cover.jpg" alt="一梦长安" class="portfolio-img" loading="lazy"
+                             onerror="this.parentElement.querySelector('.card-placeholder').style.display='flex'; this.style.display='none';">
+                        <div class="card-placeholder" style="display: none;">
+                            <i data-lucide="film"></i>
+                            <span>VIDEO</span>
+                        </div>
+                        <div class="card-overlay">
+                            <i data-lucide="play"></i>
+                        </div>
                     </div>
-                    <div class="card-body">
+                    <div class="card-content">
+                        <div class="card-meta">
+                            <span class="card-tag">AI 短剧</span>
+                            <span class="card-date">2025</span>
+                        </div>
                         <h3 class="card-title">一梦长安</h3>
                         <p class="card-subtitle">AI 短剧 Demo</p>
                         <div class="card-tech">
@@ -503,12 +514,21 @@
                 <!-- Dance Beyond the Bubble -->
                 <article class="portfolio-card" onclick="window.open('https://dancebeyondthebubble.framer.website/','_blank')">
                     <div class="card-image">
-                        <img src="https://kemi-assets-1420707478.cos.ap-shanghai.myqcloud.com/images/dance-beyond-bubble/cover.png" alt="Dance Beyond the Bubble" loading="lazy">
+                        <img src="https://kemi-assets-1420707478.cos.ap-shanghai.myqcloud.com/images/dance-beyond-bubble/cover.png" alt="Dance Beyond the Bubble" class="portfolio-img" loading="lazy"
+                             onerror="this.parentElement.querySelector('.card-placeholder').style.display='flex'; this.style.display='none';">
+                        <div class="card-placeholder" style="display: none;">
+                            <i data-lucide="globe"></i>
+                            <span>WEB</span>
+                        </div>
                         <div class="card-overlay">
-                            <span class="external-link-icon">↗</span>
+                            <i data-lucide="external-link"></i>
                         </div>
                     </div>
-                    <div class="card-body">
+                    <div class="card-content">
+                        <div class="card-meta">
+                            <span class="card-tag">Interactive</span>
+                            <span class="card-date">2024</span>
+                        </div>
                         <h3 class="card-title">Dance Beyond the Bubble</h3>
                         <p class="card-subtitle">信息茧房交互叙事</p>
                         <div class="card-tech">
