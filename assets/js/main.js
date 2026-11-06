@@ -174,8 +174,8 @@ function initTypewriter() {
 
     const phrases = [
         'AR Designer & Developer',
-        'Unity3D Enthusiast',
-        'Computer Engineering Master',
+        'Unity3D · Interactive Systems',
+        'Design-led Technical Practice',
         'Cross-border Creative Technologist'
     ];
 
